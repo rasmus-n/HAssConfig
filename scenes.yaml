@@ -1,0 +1,27 @@
+- name: Basic light
+  entities:
+    light.onion: on
+    light.desk: on
+    
+- name: Red Alert
+  entities:
+    light.mood:
+      state: on
+      rgb_color: [255,0,0]    
+      effect: Alert
+      
+- name: All off
+  entities:
+    media_player.mpd:
+      state: paused
+    group.all_lights: off
+    
+- name: Morning 1
+  entities:
+    light.mood:
+      state: on
+      rgb_color: [255,64,0]    
+      effect: Sunrise
+    light.bedroom: on
+    light.desk: on
+

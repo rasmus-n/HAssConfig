@@ -1,0 +1,109 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 15
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Copenhagen
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password: PASSWORD
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+#conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+sensor: !include sensors.yaml
+
+# Text to speech
+#tts:
+#  platform: google
+
+mqtt:
+  broker: "piPort"
+  port: 1883
+
+media_player:
+  - platform: cast
+
+  - platform: mpd
+    host: piPort
+
+light: !include lights.yaml
+
+input_select:
+  transport:
+    name: How to get to Brande
+    options:
+      - Bike
+      - Car
+      - Stay home
+
+input_slider:
+  light_on_hour:
+    name: "Hour"
+    initial: 5
+    min: 0
+    max: 23
+    step: 1
+
+  light_on_minute:
+    name: "Minute"
+    initial: 40
+    min: 0
+    max: 59
+    step: 1
+
+  radio_on_hour:
+    name: "Hour"
+    initial: 5
+    min: 0
+    max: 23
+    step: 1
+
+  radio_on_minute:
+    name: "Minute"
+    initial: 50
+    min: 0
+    max: 59
+    step: 1
+
+automation: !include automation.yaml
+
+group: !include groups.yaml
+
+scene: !include scenes.yaml
+
+device_tracker:
+  - platform: mqtt
+    consider_home: 600
+    devices:
+      Rasmus: /location/rasmus

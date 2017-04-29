@@ -1,0 +1,38 @@
+# Weather Prediction
+- platform: yr
+  name: Aarhus
+  monitored_conditions:
+  - temperature
+  - dewpointTemperature
+  - precipitation
+  - humidity
+
+# Time "sensors"
+- platform: template
+  sensors:
+    time:
+      friendly_name: "CurTime"
+      value_template: '{{ now().strftime("%-H:%M") }}'
+    light_on_time:
+      friendly_name: "Light on"
+      value_template: '{{ states.input_slider.light_on_hour.state | int }}:{% if states.input_slider.light_on_minute.state | length == 3 %}0{% endif %}{{ states.input_slider.light_on_minute.state | int}}'
+    radio_on_time:
+      friendly_name: "Radio on"
+      value_template: '{{ states.input_slider.radio_on_hour.state | int }}:{% if states.input_slider.radio_on_minute.state | length == 3 %}0{% endif %}{{ states.input_slider.radio_on_minute.state | int}}'
+
+# Temperature sensors
+- platform: mqtt
+  name: "Indoor temperature"
+  state_topic: "indoor/temperature"
+  unit_of_measurement: '°C'
+  
+# Humidity sensors
+- platform: mqtt
+  name: "Indoor humidity"
+  state_topic: "indoor/humidity"
+  unit_of_measurement: '%'
+
+# Motion sensors
+- platform: mqtt
+  name: PIR
+  state_topic: "/motion/livingroom/PIR"

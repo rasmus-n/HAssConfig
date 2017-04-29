@@ -1,0 +1,55 @@
+light:
+  name: Light
+  view: yes
+  entities:
+    - light.desk
+    - light.onion
+    - light.bedroom
+    - light.mood
+    - automation.anti_darkness
+    - automation.welcome
+    - automation.goodbye
+    - automation.daylight
+
+personal_devices:
+  name: Personal devices
+  entities:
+    - device_tracker.rasmus
+    - device_tracker.valentyna
+    - device_tracker.motion
+
+environment:
+  name: Environment
+  entities:
+    - sensor.indoor_temperature
+    - sensor.yr_temperature
+    - sensor.yr_precipitation
+    - sensor.yr_humidity
+    - sensor.indoor_humidity
+    - sensor.yr_dewpoint_temperature
+    - sun.sun
+
+morning:
+  name: Morning
+  entities:
+    - input_select.transport
+    - automation.auto_light_on
+    - sensor.light_on_time
+    - input_slider.light_on_hour
+    - input_slider.light_on_minute
+    - automation.auto_radio_on
+    - sensor.radio_on_time
+    - input_slider.radio_on_hour
+    - input_slider.radio_on_minute
+
+morning view:
+  name: Morning
+  view: yes
+  entities:
+    - group.morning
+
+environment view:
+  name: Environment
+  view: yes
+  entities:
+    - group.environment

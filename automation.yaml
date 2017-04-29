@@ -1,0 +1,232 @@
+- alias: Welcome
+####################
+  trigger:
+    platform: state
+    entity_id: group.personal_devices
+    to: "home"
+  condition:
+    condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    below: 0
+  action:
+    - service: scene.turn_on
+      entity_id: scene.basic_light
+
+- alias: Anti Darkness
+####################
+  trigger:
+    platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    below: 0
+  condition:
+    condition: state
+    entity_id: group.personal_devices
+    state: "home"
+  action:
+    - service: scene.turn_on
+      entity_id: scene.basic_light
+
+- alias: Daylight
+####################
+  trigger:
+    platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    above: 0
+  action:
+    service: light.turn_off
+
+- alias: Goodbye
+####################
+  trigger:
+    platform: state         
+    entity_id: group.personal_devices
+    to: "not_home"
+  action:
+    - service: scene.turn_on
+      entity_id: scene.all_off
+
+- alias: test
+####################
+  trigger:
+    platform: state
+    entity_id: media_player.Lund265
+    to: "playing"
+  condition:
+    condition: state
+    entity_id: media_player.MPD
+    state: "playing"
+  action:
+    service: media_player.media_pause
+    entity_id: media_player.MPD
+
+- alias: morning_preset
+####################
+  trigger:
+    platform: state
+    entity_id: input_select.transport
+  action:
+    - service: input_slider.select_value
+      data_template:
+        entity_id: input_slider.light_on_hour
+        value: '{% if is_state("input_select.transport", "Car") %} {{5|float}} {% elif is_state("input_select.transport", "Bike") %} {{5|float}} {% endif %}'
+    - service: input_slider.select_value
+      data_template:
+        entity_id: input_slider.light_on_minute
+        value: '{% if is_state("input_select.transport", "Car") %} {{40|float}} {% elif is_state("input_select.transport", "Bike") %} {{40|float}} {% endif %}'
+    - service: input_slider.select_value
+      data_template:
+        entity_id: input_slider.radio_on_hour
+        value: '{% if is_state("input_select.transport", "Car") %} {{5|float}} {% elif is_state("input_select.transport", "Bike") %} {{5|float}} {% endif %}'
+    - service: input_slider.select_value
+      data_template:
+        entity_id: input_slider.radio_on_minute
+        value: '{% if is_state("input_select.transport", "Car") %} {{55|float}} {% elif is_state("input_select.transport", "Bike") %} {{50|float}} {% endif %}'
+
+- alias: auto_light_on
+####################
+  trigger:
+    platform: template
+    value_template: '{{ states.sensor.time.state == states.sensor.light_on_time.state }}'
+  condition:
+    condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    below: 0
+  action:
+    - service: scene.turn_on
+      entity_id: scene.morning_1
+
+- alias: auto_radio_on
+####################
+  trigger:
+    platform: template
+    value_template: '{{ states.sensor.time.state == states.sensor.radio_on_time.state }}'
+  action:
+    - service: media_player.clear_playlist
+      data:
+        entity_id: media_player.MPD
+    - service: media_player.play_media
+      data:
+        entity_id: media_player.MPD
+        media_content_type: playlist
+        media_content_id: P7
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.MPD
+        volume_level: 0.07
+
+- alias: morning_preset_weekday
+####################
+  trigger:
+    platform: time
+    hours: 12
+    minutes: 0
+    seconds: 0
+  condition:
+    condition: time
+    weekday:
+      - sun
+  action:
+   - service: homeassistant.turn_on
+     entity_id: group.morning
+   - service: input_select.select_option
+     data:
+       entity_id: input_select.transport
+       option: "Bike"
+
+- alias: morning_preset_weekend
+####################
+  trigger:
+    platform: time
+    hours: 12
+    minutes: 0
+    seconds: 0
+  condition:
+    condition: time
+    weekday:
+      - fri
+  action:
+   - service: homeassistant.turn_off
+     entity_id: group.morning
+
+- alias: motion
+####################
+  trigger:
+    platform: mqtt
+    topic: "/motion/livingroom/PIR"
+    payload: "1"
+  action:
+   service: device_tracker.see
+   data:
+     dev_id: motion
+
+- alias: humid
+####################
+  trigger:
+    platform: state
+    entity_id: sensor.yr_humidity
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: "outdoor/humidity"
+      payload_template: '{{ states.sensor.yr_humidity.state | round(0) }}'
+      retain: "true"
+
+- alias: temp
+####################
+  trigger:
+    platform: state
+    entity_id: sensor.yr_temperature
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: "outdoor/temperature"
+      payload_template: '{{ states.sensor.yr_temperature.state | round(0) }}'
+      retain: "true"
+
+- alias: artist
+####################
+  trigger:
+    platform: state
+    entity_id: media_player.mpd
+    to: "playing"
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: "mpd/artist"
+      payload_template: '{{ states.media_player.mpd.attributes.media_artist }}'
+    
+- alias: title
+####################
+  trigger:
+    platform: state
+    entity_id: media_player.mpd
+    to: "playing"
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: "mpd/title"
+      payload_template: '{{ states.media_player.mpd.attributes.media_title }}'
+
+- alias: button_1
+####################
+  trigger:
+    platform: mqtt
+    topic: "buttons/button_1"
+    payload: "-"
+  action:
+    service: light.toggle
+    entity_id: light.desk
+
+- alias: button_2
+####################
+  trigger:
+    platform: mqtt
+    topic: "buttons/button_2"
+    payload: "-"
+  action:
+    service: media_player.media_next_track
+    entity_id: media_player.MPD

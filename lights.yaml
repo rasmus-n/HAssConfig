@@ -1,0 +1,44 @@
+#Bedroom
+- platform: mqtt
+  name: "Bedroom"
+  command_topic: "/light/bedroom/on_off"
+  payload_on: "1"
+  payload_off: "0"
+  retain: true
+
+#Livingroom
+- platform: mqtt
+  name: "Desk"
+  command_topic: "ESP_06820D/1/set"
+  state_topic: "ESP_06820D/1/state"
+  payload_on: "1"
+  payload_off: "0"
+  retain: true
+
+- platform: mqtt
+  name: "Onion"
+  command_topic: "light/onion/set"
+  state_topic: "light/onion/state"
+  payload_on: "1"
+  payload_off: "0"
+  retain: true
+
+- platform: mqtt
+  name: "Mood"
+  command_topic: "light/mood/command"
+  state_topic: "light/mood/command/state"
+  payload_on: "1"
+  payload_off: "0"
+  rgb_command_topic: "light/mood/rgb"
+  rgb_state_topic: "light/mood/rgb/state"
+  effect_command_topic: "light/mood/effect"
+  effect_state_topic: "light/mood/effect/state"
+  effect_list:
+    - Plain
+    - Rainbow
+    - Sunrise
+    - Fire
+    - Alert
+    - Breath
+    - Random
+  retain: true
