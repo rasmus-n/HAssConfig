@@ -296,6 +296,21 @@
     entity_id: script.goodnight
 
 
+- alias: Goodnight light
+####################
+  trigger:
+    platform: state
+    entity_id: input_boolean.in_bed
+    from: 'off'
+    to: 'on'
+  condition:
+    - condition: state
+      entity_id: light.mood
+      state: 'on'
+  action:
+    service: script.turn_on
+    entity_id: script.goodnight_light
+
 - alias: Lights on
 ####################
   trigger:

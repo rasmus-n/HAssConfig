@@ -1,13 +1,6 @@
 goodnight:
   alias: Good Night
   sequence:
-  
-    - alias: Bedroom on
-      service: light.turn_on
-      data:
-        entity_id: light.mood
-        rgb_color: [255,128,0]    
-        effect: Breath
 
     - alias: Onion off
       service: light.turn_off
@@ -23,14 +16,6 @@ goodnight:
       service: light.turn_off
       data:
         entity_id: light.castrol
-        
-    - delay:
-        minutes: 1
-
-    - alias: Kitchen 1 off
-      service: light.turn_off
-      data:
-        entity_id: light.kitchen_1
 
     - alias: Kitchen 2 off
       service: light.turn_off
@@ -42,6 +27,33 @@ goodnight:
       data:
         entity_id: light.kitchen_3
         
+    - delay:
+        minutes: 1
+
+    - alias: Kitchen 1 off
+      service: light.turn_off
+      data:
+        entity_id: light.kitchen_1
+ 
+    - delay:
+        minutes: 30
+    
+    - alias: Music off
+      service: media_player.media_pause
+      data:
+        entity_id: media_player.MPD
+
+goodnight_light:
+  alias: Goodnight light
+  sequence:
+  
+    - alias: Bedroom on
+      service: light.turn_on
+      data:
+        entity_id: light.mood
+        rgb_color: [128,64,0]    
+        effect: Breath
+
     - delay:
         minutes: 10
 

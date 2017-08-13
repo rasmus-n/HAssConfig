@@ -1,19 +1,19 @@
 light:
   name: Light
-  view: yes
   entities:
     - light.desk
     - light.onion_1
     - light.kitchen_1
     - light.kitchen_2
     - light.kitchen_3
-    - light.bedroom
+    - light.castrol
     - light.mood
     - light.clock
 
 bed:
   name: Bed
   entities:
+    - input_boolean.in_bed
     - sensor.bed_sensor_1
     - sensor.bed_sensor_2
     - sensor.bed_sensor_3
@@ -66,3 +66,64 @@ environment view:
   view: yes
   entities:
     - group.environment
+
+garden automation:
+  name: Automation
+  entities:
+    - automation.irrigation
+    - automation.irrigation_warm
+
+garden:
+  name: Garden
+  entities:
+    - switch.irrigation_pump
+    - script.irrigation
+    - sensor.yr_temperature
+    - sensor.yr_precipitation
+    - sensor.yr_humidity
+
+garden view:
+  name: Garden
+  view: yes
+  entities:
+    - group.garden
+    - group.garden_automation
+
+night automation:
+  name: Automation
+  entities:
+    - automation.in_bed
+    - automation.out_of_bed
+    - automation.goodnight
+    - automation.goodnight_light
+
+night:
+  name: Night
+  entities:
+    - script.goodnight
+    - script.goodnight_light
+
+night view:
+  name: Night
+  view: yes
+  entities:
+    - group.night_automation
+    - group.night
+    - group.bed
+
+front automation:
+  name: Automation
+  entities:
+    - automation.welcome
+    - automation.goodbye
+    - automation.daylight
+    - automation.low_light
+    - automation.goodnight
+    - automation.goodnight_light
+
+default_view:
+  name: Home
+  view: yes
+  entities:
+    - group.front_automation
+    - group.light
