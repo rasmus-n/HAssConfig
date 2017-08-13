@@ -3,13 +3,26 @@ light:
   view: yes
   entities:
     - light.desk
-    - light.onion
+    - light.onion_1
+    - light.kitchen_1
+    - light.kitchen_2
+    - light.kitchen_3
     - light.bedroom
     - light.mood
-    - automation.anti_darkness
-    - automation.welcome
-    - automation.goodbye
-    - automation.daylight
+    - light.clock
+
+bed:
+  name: Bed
+  entities:
+    - sensor.bed_sensor_1
+    - sensor.bed_sensor_2
+    - sensor.bed_sensor_3
+    - sensor.bed_sensor_1_value
+    - sensor.bed_sensor_2_value
+    - sensor.bed_sensor_3_value
+    - sensor.bed_sensor_1_base
+    - sensor.bed_sensor_2_base
+    - sensor.bed_sensor_3_base
 
 personal_devices:
   name: Personal devices

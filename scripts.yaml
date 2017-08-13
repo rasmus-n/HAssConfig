@@ -1,0 +1,99 @@
+goodnight:
+  alias: Good Night
+  sequence:
+  
+    - alias: Bedroom on
+      service: light.turn_on
+      data:
+        entity_id: light.mood
+        rgb_color: [255,128,0]    
+        effect: Breath
+
+    - alias: Onion off
+      service: light.turn_off
+      data:
+        entity_id: light.onion_1
+
+    - alias: Desk off
+      service: light.turn_off
+      data:
+        entity_id: light.desk
+
+    - alias: Castrol off
+      service: light.turn_off
+      data:
+        entity_id: light.castrol
+        
+    - delay:
+        minutes: 1
+
+    - alias: Kitchen 1 off
+      service: light.turn_off
+      data:
+        entity_id: light.kitchen_1
+
+    - alias: Kitchen 2 off
+      service: light.turn_off
+      data:
+        entity_id: light.kitchen_2
+
+    - alias: Kitchen 3 off
+      service: light.turn_off
+      data:
+        entity_id: light.kitchen_3
+        
+    - delay:
+        minutes: 10
+
+    - alias: Bedroom off
+      service: light.turn_off
+      data:
+        entity_id: light.mood
+
+pause_anti_darkness:
+  alias: Pause Anti Darkness
+  sequence:
+    - alias: Disable light sensor
+      service: automation.turn_off
+      data:
+        entity_id: automation.low_light
+
+    - delay:
+        minutes: 2
+
+    - alias: Enable light sensor
+      service: automation.turn_on
+      data:
+        entity_id: automation.low_light
+        
+irrigation:
+  alias: Irrigation
+  sequence:
+    - alias: Pump prime
+      service: switch.turn_on
+      data:
+        entity_id: switch.irrigation_pump
+         
+    - delay:
+       seconds: 10
+
+    - alias: Pump pause
+      service: switch.turn_off
+      data:
+        entity_id: switch.irrigation_pump
+         
+    - delay:
+       seconds: 2
+
+    - alias: Pump on
+      service: switch.turn_on
+      data:
+        entity_id: switch.irrigation_pump
+         
+    - delay:
+       minutes: 1
+        
+    - alias: Pump off
+      service: switch.turn_off
+      data:
+        entity_id: switch.irrigation_pump        

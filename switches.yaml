@@ -1,0 +1,7 @@
+#Livingroom
+- platform: mqtt
+  name: "Irrigation pump"
+  command_topic: "Irrigation/set"
+  state_topic: "Irrigation/state"
+  payload_on: "1"
+  payload_off: "0"

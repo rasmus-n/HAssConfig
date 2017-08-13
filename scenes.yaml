@@ -1,8 +1,58 @@
 - name: Basic light
   entities:
-    light.onion: on
+#    light.onion: on
+#    light.desk: on
+    light.kitchen:
+      brightness: 5
+    light.kitchen_1:
+      state: on
+      color_temp: 500
+      brightness: 5
+    light.kitchen_2:
+      state: on
+      color_temp: 500
+      brightness: 5
+    light.kitchen_3:
+      state: on
+      color_temp: 500
+      brightness: 5
+    light.onion_1:
+      state: on
+      color_temp: 500
+      brightness: 5
+    light.mood:
+      state: on
+      rgb_color: [128,64,0]    
+      effect: Plain
+ 
+- name: Full light
+  entities:
+    light.castrol: on
     light.desk: on
-    
+    light.kitchen:
+      state: on
+      brightness: 255
+    light.kitchen_1:
+      state: on
+      color_temp: 300
+      brightness: 255
+    light.kitchen_2:
+      state: on
+      color_temp: 300
+      brightness: 255
+    light.kitchen_3:
+      state: on
+      color_temp: 300
+      brightness: 255
+    light.onion_1:
+      state: on
+      color_temp: 300
+      brightness: 255
+    light.mood:
+      state: on
+      rgb_color: [255,255,192]    
+      effect: Plain
+ 
 - name: Red Alert
   entities:
     light.mood:
@@ -22,6 +72,24 @@
       state: on
       rgb_color: [255,64,0]    
       effect: Sunrise
-    light.bedroom: on
-    light.desk: on
+#    light.bedroom: on
+    light.kitchen:
+      state: on
+      brightness: 255
+    light.kitchen_1:
+      state: on
+      color_temp: 300
+      brightness: 127
+    light.kitchen_2:
+      state: on
+      color_temp: 300
+      brightness: 127
+    light.kitchen_3:
+      state: on
+      color_temp: 300
+      brightness: 127
+    light.onion_1:
+      state: on
+      color_temp: 300
+      brightness: 127
 

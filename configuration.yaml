@@ -96,11 +96,24 @@ input_slider:
     max: 59
     step: 1
 
+input_boolean:
+  daylight:
+    name: "Daylight?"
+    initial: off
+    
+  in_bed:
+    name: "In bed"
+    initial: off
+
 automation: !include automation.yaml
 
 group: !include groups.yaml
 
 scene: !include scenes.yaml
+
+script: !include scripts.yaml
+
+switch: !include switches.yaml
 
 device_tracker:
   - platform: mqtt

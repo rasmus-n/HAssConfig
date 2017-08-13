@@ -25,14 +25,79 @@
   name: "Indoor temperature"
   state_topic: "indoor/temperature"
   unit_of_measurement: '°C'
-  
+
+#~ - platform: mqtt
+  #~ name: "Bathroom temperature"
+  #~ state_topic: "bathroom/temperature"
+  #~ unit_of_measurement: '°C'
+
 # Humidity sensors
 - platform: mqtt
   name: "Indoor humidity"
   state_topic: "indoor/humidity"
   unit_of_measurement: '%'
 
-# Motion sensors
+#~ - platform: mqtt
+  #~ name: "Bathroom humidity"
+  #~ state_topic: "bathroom/humidity"
+  #~ unit_of_measurement: '%'
+  
+# Light sensors
 - platform: mqtt
-  name: PIR
-  state_topic: "/motion/livingroom/PIR"
+  name: "Indoor light"
+  state_topic: "indoor/light"
+  unit_of_measurement: '%'
+
+# Bed sensors
+- platform: mqtt
+  name: "Bed sensor 1"
+  state_topic: "bath/touch/0"
+
+- platform: mqtt
+  name: "Bed sensor 1 value"
+  state_topic: "bath/touch/0/value"
+  unit_of_measurement: '-'
+
+- platform: mqtt
+  name: "Bed sensor 1 base"
+  state_topic: "bath/touch/0/base"
+  unit_of_measurement: '-'
+
+- platform: mqtt
+  name: "Bed sensor 2"
+  state_topic: "bath/touch/1"
+
+- platform: mqtt
+  name: "Bed sensor 2 value"
+  state_topic: "bath/touch/1/value"
+  unit_of_measurement: '-'
+
+- platform: mqtt
+  name: "Bed sensor 2 base"
+  state_topic: "bath/touch/1/base"
+  unit_of_measurement: '-'
+  
+- platform: mqtt
+  name: "Bed sensor 3"
+  state_topic: "bath/touch/2"
+
+- platform: mqtt
+  name: "Bed sensor 3 value"
+  state_topic: "bath/touch/2/value"
+  unit_of_measurement: '-'
+
+- platform: mqtt
+  name: "Bed sensor 3 base"
+  state_topic: "bath/touch/2/base"
+  unit_of_measurement: '-'
+
+# Utility sensors
+- platform: mqtt
+  name: "Power"
+  state_topic: "meter/power"
+  unit_of_measurement: 'W'
+
+# Motion sensors
+#- platform: mqtt
+#  name: PIR
+#  state_topic: "motion/test"

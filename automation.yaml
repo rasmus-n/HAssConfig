@@ -5,38 +5,15 @@
     entity_id: group.personal_devices
     to: "home"
   condition:
-    condition: numeric_state
-    entity_id: sun.sun
-    value_template: '{{ state.attributes.elevation }}'
-    below: 0
+    - condition: state
+      entity_id: input_boolean.daylight
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.in_bed
+      state: "off"
   action:
     - service: scene.turn_on
       entity_id: scene.basic_light
-
-- alias: Anti Darkness
-####################
-  trigger:
-    platform: numeric_state
-    entity_id: sun.sun
-    value_template: '{{ state.attributes.elevation }}'
-    below: 0
-  condition:
-    condition: state
-    entity_id: group.personal_devices
-    state: "home"
-  action:
-    - service: scene.turn_on
-      entity_id: scene.basic_light
-
-- alias: Daylight
-####################
-  trigger:
-    platform: numeric_state
-    entity_id: sun.sun
-    value_template: '{{ state.attributes.elevation }}'
-    above: 0
-  action:
-    service: light.turn_off
 
 - alias: Goodbye
 ####################
@@ -48,7 +25,70 @@
     - service: scene.turn_on
       entity_id: scene.all_off
 
-- alias: test
+- alias: Low light
+####################
+  trigger:
+    platform: state
+    entity_id: input_boolean.daylight
+    to: "off"
+    for:
+      minutes: 2
+  condition:
+    - condition: state
+      entity_id: group.personal_devices
+      state: "home"
+    - condition: state
+      entity_id: input_boolean.in_bed
+      state: "off"
+  action:
+    - service: scene.turn_on
+      entity_id: scene.basic_light
+
+- alias: Daylight
+####################
+  trigger:
+    platform: state
+    entity_id: input_boolean.daylight
+    to: "on"
+    for:
+      minutes: 2
+  action:
+    service: light.turn_off
+
+#~ - alias: Anti Anti Darkness
+#~ ####################
+  #~ trigger:
+    #~ platform: state
+    #~ entity_id: light.mood
+    #~ to: "off"
+  #~ action:
+    #~ - service: script.turn_on
+      #~ entity_id: script.pause_anti_darkness
+
+- alias: Daylight on
+####################
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.indoor_light
+    above: 80
+
+  action:
+    service: input_boolean.turn_on
+    entity_id: input_boolean.daylight
+  
+- alias: Daylight off
+####################
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.indoor_light
+    below: 30
+
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.daylight
+
+
+- alias: Pause music for TV
 ####################
   trigger:
     platform: state
@@ -92,9 +132,8 @@
     value_template: '{{ states.sensor.time.state == states.sensor.light_on_time.state }}'
   condition:
     condition: numeric_state
-    entity_id: sun.sun
-    value_template: '{{ state.attributes.elevation }}'
-    below: 0
+    entity_id: sensor.indoor_light
+    below: 30
   action:
     - service: scene.turn_on
       entity_id: scene.morning_1
@@ -156,24 +195,13 @@
 ####################
   trigger:
     platform: mqtt
-    topic: "/motion/livingroom/PIR"
+    topic: "motion/test"
     payload: "1"
   action:
    service: device_tracker.see
    data:
      dev_id: motion
 
-- alias: humid
-####################
-  trigger:
-    platform: state
-    entity_id: sensor.yr_humidity
-  action:
-    service: mqtt.publish
-    data_template:
-      topic: "outdoor/humidity"
-      payload_template: '{{ states.sensor.yr_humidity.state | round(0) }}'
-      retain: "true"
 
 - alias: temp
 ####################
@@ -187,46 +215,198 @@
       payload_template: '{{ states.sensor.yr_temperature.state | round(0) }}'
       retain: "true"
 
-- alias: artist
+- alias: In bed
 ####################
   trigger:
-    platform: state
-    entity_id: media_player.mpd
-    to: "playing"
+    - platform: state
+      entity_id: sensor.bed_sensor_1
+#      from: '0'
+      to: '1'
+      for:
+        minutes: 1
+        
+    - platform: state
+      entity_id: sensor.bed_sensor_2
+      #~ from: '0'
+      to: '1'
+      for:
+        minutes: 1
+        
+    - platform: state
+      entity_id: sensor.bed_sensor_3
+      #~ from: '0'
+      to: '1'
+      for:
+        minutes: 1
+        
   action:
-    service: mqtt.publish
-    data_template:
-      topic: "mpd/artist"
-      payload_template: '{{ states.media_player.mpd.attributes.media_artist }}'
-    
-- alias: title
-####################
-  trigger:
-    platform: state
-    entity_id: media_player.mpd
-    to: "playing"
-  action:
-    service: mqtt.publish
-    data_template:
-      topic: "mpd/title"
-      payload_template: '{{ states.media_player.mpd.attributes.media_title }}'
+    service: input_boolean.turn_on
+    data:
+      entity_id: input_boolean.in_bed
 
-- alias: button_1
+- alias: Out of bed
+####################
+  trigger:
+    - platform: state
+      entity_id: sensor.bed_sensor_1
+      #~ from: '1'
+      to: '0'
+      for:
+        seconds: 30
+        
+    - platform: state
+      entity_id: sensor.bed_sensor_2
+      #~ from: '1'
+      to: '0'
+      for:
+        seconds: 30
+        
+    - platform: state
+      entity_id: sensor.bed_sensor_3
+      #~ from: '1'
+      to: '0'
+      for:
+        seconds: 30
+        
+  condition:
+    - condition: state
+      entity_id: sensor.bed_sensor_1
+      state: '0'
+    - condition: state
+      entity_id: sensor.bed_sensor_2
+      state: '0'
+    - condition: state
+      entity_id: sensor.bed_sensor_3
+      state: '0'
+    
+  action:
+    service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.in_bed
+
+- alias: Goodnight
+####################
+  trigger:
+    platform: state
+    entity_id: input_boolean.in_bed
+    from: 'off'
+    to: 'on'
+  action:
+    service: script.turn_on
+    entity_id: script.goodnight
+
+
+- alias: Lights on
 ####################
   trigger:
     platform: mqtt
-    topic: "buttons/button_1"
-    payload: "-"
+    topic: "buttons/button_1/hold"
+  condition:
+    - condition: template
+      value_template: '{{ trigger.payload | round(0) > 30 }}'
+  action:
+    service: scene.turn_on
+    entity_id: scene.full_light
+
+- alias: Lights off
+####################
+  trigger:
+    platform: mqtt
+    topic: "buttons/button_1/repeat"
+  condition:
+    - condition: template
+      value_template: '{{ trigger.payload | round(0) == 2 }}'
+  action:
+    service: scene.turn_on
+    entity_id: scene.all_off
+
+- alias: Desk light
+####################
+  trigger:
+    platform: mqtt
+    topic: "buttons/button_2/hold"
+  condition:
+    - condition: template
+      value_template: '{{ trigger.payload | round(0) < 30 }}'
   action:
     service: light.toggle
     entity_id: light.desk
 
-- alias: button_2
+- alias: Castrol light
 ####################
   trigger:
     platform: mqtt
-    topic: "buttons/button_2"
-    payload: "-"
+    topic: "buttons/button_3/hold"
+  condition:
+    - condition: template
+      value_template: '{{ trigger.payload | round(0) < 30 }}'
   action:
-    service: media_player.media_next_track
-    entity_id: media_player.MPD
+    service: light.toggle
+    entity_id: light.castrol
+
+
+- alias: Random
+####################
+  trigger:
+    platform: mqtt
+    topic: "buttons/button_5/repeat"
+  condition:
+    - condition: template
+      value_template: '{{ trigger.payload | round(0) == 3 }}'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: light.mood
+      effect: Random
+    
+
+- alias: Red alert
+####################
+  trigger:
+    platform: mqtt
+    topic: "buttons/button_5/repeat"
+  condition:
+    - condition: template
+      value_template: '{{ trigger.payload | round(0) == 2 }}'
+  action:
+    service: scene.turn_on
+    entity_id: scene.red_alert
+    
+- alias: Irrigation
+####################
+  trigger:
+    platform: time
+    minutes: 0
+    seconds: 0
+  condition:
+    condition: and
+    conditions:
+      - condition: time
+        after: "10:00:00"
+        before: "19:00:00"
+      - condition: template
+        value_template: '{{ states.sensor.yr_precipitation.state | round(0) < 1 }}'
+  action:
+   - service: script.turn_on
+     entity_id: script.irrigation
+
+- alias: Irrigation warm
+####################
+  trigger:
+    platform: time
+    minutes: 30
+    seconds: 0
+  condition:
+    condition: and
+    conditions:
+      - condition: time
+        after: "10:00:00"
+        before: "19:00:00"
+      - condition: template
+        value_template: '{{ states.sensor.yr_temperature.state | round(0) > 20 }}'
+      - condition: template
+        value_template: '{{ states.sensor.yr_precipitation.state | round(0) < 1 }}'
+        
+  action:
+   - service: script.turn_on
+     entity_id: script.irrigation

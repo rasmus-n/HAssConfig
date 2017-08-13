@@ -1,10 +1,10 @@
 #Bedroom
-- platform: mqtt
-  name: "Bedroom"
-  command_topic: "/light/bedroom/on_off"
-  payload_on: "1"
-  payload_off: "0"
-  retain: true
+#- platform: mqtt
+#  name: "Bedroom"
+#  command_topic: "/light/bedroom/on_off"
+#  payload_on: "1"
+#  payload_off: "0"
+#  retain: true
 
 #Livingroom
 - platform: mqtt
@@ -16,7 +16,7 @@
   retain: true
 
 - platform: mqtt
-  name: "Onion"
+  name: "Castrol"
   command_topic: "light/onion/set"
   state_topic: "light/onion/state"
   payload_on: "1"
@@ -41,4 +41,17 @@
     - Alert
     - Breath
     - Random
+  retain: true
+
+- platform: mqtt
+  name: "Clock"
+  command_topic: "light/clock1/command"
+  state_topic: "light/clock1/command/state"
+  payload_on: "1"
+  payload_off: "0"
+  rgb_command_topic: "light/clock1/rgb"
+  rgb_state_topic: "light/clock1/rgb/state"
+  effect_command_topic: "light/clock1/effect"
+  effect_state_topic: "light/clock1/effect/state"
+
   retain: true
