@@ -109,3 +109,24 @@ irrigation:
       service: switch.turn_off
       data:
         entity_id: switch.irrigation_pump        
+
+weather_presentation:
+  alias: Weather presenation
+  sequence:
+    - service: tts.google_say
+      data_template:
+        cache: false
+        entity_id: media_player.mpd
+        message: >
+          Todays weather {{states('sensor.aarhus_hourly_summary')}} Current temperature feels like {{states('sensor.aarhus_apparent_temperature') | round(0)}} degrees. Highest temperature will feel like {{states('sensor.aarhus_daily_high_apparent_temperature') | round(0)}} degrees.
+          {% if states('sensor.aarhus_wind_speed') | float > 5 %}
+          Current wind speed is {{states('sensor.aarhus_wind_speed') | round(0)}} meters per second.
+          {% endif %}
+          {% if states('sensor.aarhus_precip_intensity') | float > 1 %}
+          Current rain intensity is {{states('sensor.aarhus_precip_intensity') | round(0)}} millimeters per hour.
+          {% endif %}
+          {% if states('sensor.aarhus_daily_max_precip_intensity') | float > 1 %}
+          Highest expected rain intensity for today is {{states('sensor.aarhus_daily_max_precip_intensity') | round(0)}} millimeters per hour.
+          {% else %}
+          No rain expected today.
+          {% endif %}

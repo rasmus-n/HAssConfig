@@ -28,19 +28,26 @@ personal_devices:
   name: Personal devices
   entities:
     - device_tracker.rasmus
-    - device_tracker.valentyna
     - device_tracker.motion
 
 environment:
   name: Environment
   entities:
-    - sensor.indoor_temperature
-    - sensor.yr_temperature
-    - sensor.yr_precipitation
-    - sensor.yr_humidity
-    - sensor.indoor_humidity
-    - sensor.yr_dewpoint_temperature
+    - sensor.indoor_light
     - sun.sun
+    - sensor.indoor_temperature
+    - sensor.aarhus_temperature
+    - sensor.aarhus_apparent_temperature
+    - sensor.aarhus_daily_low_temperature
+    - sensor.aarhus_daily_low_apparent_temperature
+    - sensor.aarhus_daily_high_temperature
+    - sensor.aarhus_daily_high_apparent_temperature
+    - sensor.indoor_humidity
+    - sensor.aarhus_humidity
+    - sensor.aarhus_precip_intensity
+    - sensor.aarhus_daily_max_precip_intensity
+    - sensor.aarhus_wind_speed
+    - sensor.aarhus_wind_bearing
 
 morning:
   name: Morning
@@ -71,16 +78,15 @@ garden automation:
   name: Automation
   entities:
     - automation.irrigation
-    - automation.irrigation_warm
 
 garden:
   name: Garden
   entities:
     - switch.irrigation_pump
     - script.irrigation
-    - sensor.yr_temperature
-    - sensor.yr_precipitation
-    - sensor.yr_humidity
+    - sensor.aarhus_temperature
+    - sensor.aarhus_precip_intensity
+    - sensor.aarhus_humidity
 
 garden view:
   name: Garden
@@ -121,9 +127,17 @@ front automation:
     - automation.goodnight
     - automation.goodnight_light
 
+scenes:
+  name: Scenes
+  entities:
+    - scene.basic_light
+    - scene.full_light
+    - script.weather_presentation
+
 default_view:
   name: Home
   view: yes
   entities:
     - group.front_automation
     - group.light
+    - group.scenes

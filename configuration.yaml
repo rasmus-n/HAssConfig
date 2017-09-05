@@ -44,8 +44,8 @@ sun:
 sensor: !include sensors.yaml
 
 # Text to speech
-#tts:
-#  platform: google
+tts:
+  platform: google
 
 mqtt:
   broker: "piPort"

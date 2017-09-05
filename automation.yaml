@@ -87,6 +87,22 @@
     service: input_boolean.turn_off
     entity_id: input_boolean.daylight
 
+- alias: Daylight init
+####################
+  trigger:
+    platform: state
+    entity_id: sensor.indoor_light
+    
+  condition:
+    condition: numeric_state
+    entity_id: sensor.indoor_light
+    above: 80
+    
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.daylight
+    - service: automation.turn_off
+      entity_id: automation.daylight_init
 
 - alias: Pause music for TV
 ####################
@@ -207,12 +223,12 @@
 ####################
   trigger:
     platform: state
-    entity_id: sensor.yr_temperature
+    entity_id: sensor.aarhus_temperature
   action:
     service: mqtt.publish
     data_template:
       topic: "outdoor/temperature"
-      payload_template: '{{ states.sensor.yr_temperature.state | round(0) }}'
+      payload_template: '{{ states.sensor.aarhus_temperature.state | round(0) }}'
       retain: "true"
 
 - alias: In bed
@@ -386,11 +402,13 @@
   action:
     service: scene.turn_on
     entity_id: scene.red_alert
-    
+
+
 - alias: Irrigation
 ####################
   trigger:
     platform: time
+    hours: '/2'
     minutes: 0
     seconds: 0
   condition:
@@ -398,30 +416,22 @@
     conditions:
       - condition: time
         after: "10:00:00"
-        before: "19:00:00"
+        before: "20:00:00"
       - condition: template
-        value_template: '{{ states.sensor.yr_precipitation.state | round(0) < 1 }}'
+        value_template: '{{ states.sensor.aarhus_precip_intensity.state | round(0) < 1 }}'
   action:
    - service: script.turn_on
      entity_id: script.irrigation
 
-- alias: Irrigation warm
+
+- alias: Test to speech
 ####################
   trigger:
-    platform: time
-    minutes: 30
-    seconds: 0
+    platform: mqtt
+    topic: "buttons/button_4/hold"
   condition:
-    condition: and
-    conditions:
-      - condition: time
-        after: "10:00:00"
-        before: "19:00:00"
-      - condition: template
-        value_template: '{{ states.sensor.yr_temperature.state | round(0) > 20 }}'
-      - condition: template
-        value_template: '{{ states.sensor.yr_precipitation.state | round(0) < 1 }}'
-        
+    - condition: template
+      value_template: '{{ trigger.payload | round(0) < 30 }}'
   action:
    - service: script.turn_on
-     entity_id: script.irrigation
+     entity_id: script.weather_presentation

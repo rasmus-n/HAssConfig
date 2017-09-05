@@ -1,11 +1,31 @@
 # Weather Prediction
-- platform: yr
+#~ - platform: yr
+  #~ name: Aarhus
+  #~ monitored_conditions:
+  #~ - temperature
+  #~ - dewpointTemperature
+  #~ - precipitation
+  #~ - humidity
+
+- platform: darksky
   name: Aarhus
+  api_key: 6f2858bbbaaeb4b9f04fd0e3baa18240
+  update_interval:
+    minutes: 5
   monitored_conditions:
-  - temperature
-  - dewpointTemperature
-  - precipitation
-  - humidity
+    - temperature
+    - temperature_max
+    - temperature_min
+    - apparent_temperature
+    - apparent_temperature_min
+    - apparent_temperature_max
+    - precip_intensity
+    - precip_intensity_max
+    - wind_speed
+    - wind_bearing
+    - humidity
+    - minutely_summary
+    - hourly_summary
 
 # Time "sensors"
 - platform: template
@@ -98,6 +118,11 @@
   unit_of_measurement: 'W'
 
 # Motion sensors
-#- platform: mqtt
-#  name: PIR
-#  state_topic: "motion/test"
+#~ - platform: mqtt
+  #~ name: PIR
+  #~ state_topic: "motion/test"
+  
+- platform: mqtt
+  name: PIR_length
+  state_topic: "motion/length"
+  unit_of_measurement: 's'
