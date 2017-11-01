@@ -64,51 +64,29 @@
   
 # Light sensors
 - platform: mqtt
-  name: "Indoor light"
-  state_topic: "indoor/light"
+  name: "Light level"
+  state_topic: "lightlevel/west"
   unit_of_measurement: '%'
 
 # Bed sensors
 - platform: mqtt
-  name: "Bed sensor 1"
-  state_topic: "bath/touch/0"
+  name: "Bed sensor value"
+  state_topic: "bed/touch/value"
+  unit_of_measurement: '-'
 
 - platform: mqtt
   name: "Bed sensor 1 value"
-  state_topic: "bath/touch/0/value"
+  state_topic: "bed/touch/0/value"
   unit_of_measurement: '-'
-
-- platform: mqtt
-  name: "Bed sensor 1 base"
-  state_topic: "bath/touch/0/base"
-  unit_of_measurement: '-'
-
-- platform: mqtt
-  name: "Bed sensor 2"
-  state_topic: "bath/touch/1"
 
 - platform: mqtt
   name: "Bed sensor 2 value"
-  state_topic: "bath/touch/1/value"
+  state_topic: "bed/touch/1/value"
   unit_of_measurement: '-'
-
-- platform: mqtt
-  name: "Bed sensor 2 base"
-  state_topic: "bath/touch/1/base"
-  unit_of_measurement: '-'
-  
-- platform: mqtt
-  name: "Bed sensor 3"
-  state_topic: "bath/touch/2"
 
 - platform: mqtt
   name: "Bed sensor 3 value"
-  state_topic: "bath/touch/2/value"
-  unit_of_measurement: '-'
-
-- platform: mqtt
-  name: "Bed sensor 3 base"
-  state_topic: "bath/touch/2/base"
+  state_topic: "bed/touch/2/value"
   unit_of_measurement: '-'
 
 # Utility sensors

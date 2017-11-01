@@ -105,6 +105,11 @@ input_boolean:
     name: "In bed"
     initial: off
 
+  after_dark:
+    name: "After dark?"
+    initial: off
+
+
 automation: !include automation.yaml
 
 group: !include groups.yaml
@@ -120,3 +125,9 @@ device_tracker:
     consider_home: 600
     devices:
       Rasmus: /location/rasmus
+      
+  - platform: nmap_tracker
+    hosts: 192.168.1.1/24
+    home_interval: 6
+    exclude:
+      - 192.168.1.8

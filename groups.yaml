@@ -8,21 +8,15 @@ light:
     - light.kitchen_3
     - light.castrol
     - light.mood
-    - light.clock
 
 bed:
   name: Bed
   entities:
     - input_boolean.in_bed
-    - sensor.bed_sensor_1
-    - sensor.bed_sensor_2
-    - sensor.bed_sensor_3
+    - sensor.bed_sensor_value
     - sensor.bed_sensor_1_value
     - sensor.bed_sensor_2_value
     - sensor.bed_sensor_3_value
-    - sensor.bed_sensor_1_base
-    - sensor.bed_sensor_2_base
-    - sensor.bed_sensor_3_base
 
 personal_devices:
   name: Personal devices
@@ -33,7 +27,7 @@ personal_devices:
 environment:
   name: Environment
   entities:
-    - sensor.indoor_light
+    - sensor.light_level
     - sun.sun
     - sensor.indoor_temperature
     - sensor.aarhus_temperature
@@ -78,12 +72,18 @@ garden automation:
   name: Automation
   entities:
     - automation.irrigation
+    - automation.air
+    - automation.garden_light_on
+    - automation.garden_light_off
 
 garden:
   name: Garden
   entities:
     - switch.irrigation_pump
     - script.irrigation
+    - switch.garden_light
+    - switch.garden_air
+    - script.garden_air
     - sensor.aarhus_temperature
     - sensor.aarhus_precip_intensity
     - sensor.aarhus_humidity
@@ -131,6 +131,7 @@ scenes:
   name: Scenes
   entities:
     - scene.basic_light
+    - scene.light_after_dark
     - scene.full_light
     - script.weather_presentation
 

@@ -1,7 +1,22 @@
 #Livingroom
 - platform: mqtt
   name: "Irrigation pump"
-  command_topic: "Irrigation/set"
-  state_topic: "Irrigation/state"
+  command_topic: "garden/irrigation/set"
+  state_topic: "garden/irrigation/state"
+  payload_on: "1"
+  payload_off: "0"
+
+- platform: mqtt
+  name: "Garden light"
+  command_topic: "garden/light/set"
+  state_topic: "garden/light/state"
+  payload_on: "100"
+  payload_off: "0"
+  retain: true
+
+- platform: mqtt
+  name: "Garden air"
+  command_topic: "garden/air/set"
+  state_topic: "garden/air/state"
   payload_on: "1"
   payload_off: "0"

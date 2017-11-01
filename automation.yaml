@@ -7,13 +7,40 @@
   condition:
     - condition: state
       entity_id: input_boolean.daylight
-      state: "off"
+      state: 'off'
     - condition: state
       entity_id: input_boolean.in_bed
-      state: "off"
+      state: 'off'
   action:
     - service: scene.turn_on
       entity_id: scene.basic_light
+
+- alias: Welcome 2
+####################
+  trigger:
+    platform: state
+    entity_id: group.personal_devices
+    to: "home"
+  action:
+    - service: switch.turn_off
+      entity_id: switch.garden_air
+
+- alias: Welcome 3
+####################
+  trigger:
+    platform: state
+    entity_id: group.personal_devices
+    to: "home"
+  condition:
+    - condition: state
+      entity_id: input_boolean.after_dark
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.in_bed
+      state: 'off'
+  action:
+    - service: scene.turn_on
+      entity_id: scene.light_after_dark
 
 - alias: Goodbye
 ####################
@@ -30,7 +57,7 @@
   trigger:
     platform: state
     entity_id: input_boolean.daylight
-    to: "off"
+    to: 'off'
     for:
       minutes: 2
   condition:
@@ -39,38 +66,47 @@
       state: "home"
     - condition: state
       entity_id: input_boolean.in_bed
-      state: "off"
+      state: 'off'
   action:
     - service: scene.turn_on
       entity_id: scene.basic_light
+
+- alias: No light
+####################
+  trigger:
+    platform: state
+    entity_id: input_boolean.after_dark
+    to: 'on'
+    for:
+      minutes: 2
+  condition:
+    - condition: state
+      entity_id: group.personal_devices
+      state: "home"
+    - condition: state
+      entity_id: input_boolean.in_bed
+      state: 'off'
+  action:
+    - service: scene.turn_on
+      entity_id: scene.light_after_dark
 
 - alias: Daylight
 ####################
   trigger:
     platform: state
     entity_id: input_boolean.daylight
-    to: "on"
+    to: 'on'
     for:
       minutes: 2
   action:
     service: light.turn_off
 
-#~ - alias: Anti Anti Darkness
-#~ ####################
-  #~ trigger:
-    #~ platform: state
-    #~ entity_id: light.mood
-    #~ to: "off"
-  #~ action:
-    #~ - service: script.turn_on
-      #~ entity_id: script.pause_anti_darkness
-
 - alias: Daylight on
 ####################
   trigger:
     platform: numeric_state
-    entity_id: sensor.indoor_light
-    above: 80
+    entity_id: sensor.light_level
+    above: 50
 
   action:
     service: input_boolean.turn_on
@@ -80,29 +116,68 @@
 ####################
   trigger:
     platform: numeric_state
-    entity_id: sensor.indoor_light
+    entity_id: sensor.light_level
     below: 30
 
   action:
     service: input_boolean.turn_off
     entity_id: input_boolean.daylight
-
+    
 - alias: Daylight init
 ####################
   trigger:
     platform: state
-    entity_id: sensor.indoor_light
+    entity_id: sensor.light_level
     
   condition:
     condition: numeric_state
-    entity_id: sensor.indoor_light
-    above: 80
+    entity_id: sensor.light_level
+    above: 50
     
   action:
     - service: input_boolean.turn_on
       entity_id: input_boolean.daylight
     - service: automation.turn_off
       entity_id: automation.daylight_init
+
+- alias: After dark on
+####################
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.light_level
+    below: 15
+
+  action:
+    service: input_boolean.turn_on
+    entity_id: input_boolean.after_dark
+  
+- alias: After dark off
+####################
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.light_level
+    above: 30
+
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.after_dark
+    
+- alias: After dark init
+####################
+  trigger:
+    platform: state
+    entity_id: sensor.light_level
+    
+  condition:
+    condition: numeric_state
+    entity_id: sensor.light_level
+    below: 15
+    
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.after_dark
+    - service: automation.turn_off
+      entity_id: automation.after_dark_init
 
 - alias: Pause music for TV
 ####################
@@ -147,9 +222,9 @@
     platform: template
     value_template: '{{ states.sensor.time.state == states.sensor.light_on_time.state }}'
   condition:
-    condition: numeric_state
-    entity_id: sensor.indoor_light
-    below: 30
+    condition: state
+    entity_id: input_boolean.daylight
+    state: 'off'
   action:
     - service: scene.turn_on
       entity_id: scene.morning_1
@@ -234,26 +309,11 @@
 - alias: In bed
 ####################
   trigger:
-    - platform: state
-      entity_id: sensor.bed_sensor_1
-#      from: '0'
-      to: '1'
+    - platform: numeric_state
+      entity_id: sensor.bed_sensor_value
+      below: 345
       for:
-        minutes: 1
-        
-    - platform: state
-      entity_id: sensor.bed_sensor_2
-      #~ from: '0'
-      to: '1'
-      for:
-        minutes: 1
-        
-    - platform: state
-      entity_id: sensor.bed_sensor_3
-      #~ from: '0'
-      to: '1'
-      for:
-        minutes: 1
+        seconds: 3
         
   action:
     service: input_boolean.turn_on
@@ -263,37 +323,11 @@
 - alias: Out of bed
 ####################
   trigger:
-    - platform: state
-      entity_id: sensor.bed_sensor_1
-      #~ from: '1'
-      to: '0'
+    - platform: numeric_state
+      entity_id: sensor.bed_sensor_value
+      above: 350
       for:
-        seconds: 30
-        
-    - platform: state
-      entity_id: sensor.bed_sensor_2
-      #~ from: '1'
-      to: '0'
-      for:
-        seconds: 30
-        
-    - platform: state
-      entity_id: sensor.bed_sensor_3
-      #~ from: '1'
-      to: '0'
-      for:
-        seconds: 30
-        
-  condition:
-    - condition: state
-      entity_id: sensor.bed_sensor_1
-      state: '0'
-    - condition: state
-      entity_id: sensor.bed_sensor_2
-      state: '0'
-    - condition: state
-      entity_id: sensor.bed_sensor_3
-      state: '0'
+        seconds: 3
     
   action:
     service: input_boolean.turn_off
@@ -307,6 +341,9 @@
     entity_id: input_boolean.in_bed
     from: 'off'
     to: 'on'
+    for:
+      minutes: 1
+      
   action:
     service: script.turn_on
     entity_id: script.goodnight
@@ -319,10 +356,14 @@
     entity_id: input_boolean.in_bed
     from: 'off'
     to: 'on'
+    for:
+      minutes: 1
+    
   condition:
     - condition: state
       entity_id: light.mood
       state: 'on'
+      
   action:
     service: script.turn_on
     entity_id: script.goodnight_light
@@ -408,7 +449,7 @@
 ####################
   trigger:
     platform: time
-    hours: '/2'
+    hours: '/4'
     minutes: 0
     seconds: 0
   condition:
@@ -423,6 +464,55 @@
    - service: script.turn_on
      entity_id: script.irrigation
 
+- alias: Air
+####################
+  trigger:
+    platform: time
+    minutes: 0
+    seconds: 0
+  condition:
+    - condition: time
+      after: "08:59:00"
+      before: "16:01:00"
+    - condition: state
+      entity_id: group.personal_devices
+      state: "not_home"
+  action:
+   - service: script.turn_on
+     entity_id: script.garden_air
+
+- alias: Garden light on
+####################
+  trigger:
+    platform: time
+    at: "07:00:00"
+  action:
+   - service: switch.turn_on
+     entity_id: switch.garden_light
+     
+- alias: Garden light off
+####################
+  trigger:
+    platform: time
+    at: "21:00:00"
+  action:
+   - service: switch.turn_off
+     entity_id: switch.garden_light
+
+- alias: Weather light
+####################
+  trigger:
+   - platform: state
+     entity_id: sensor.aarhus_apparent_temperature
+   - platform: state
+     entity_id: sensor.aarhus_daily_max_precip_intensity
+
+  action:
+   - service: mqtt.publish
+     data_template:
+       topic: "light/clock1/rgb"
+       payload_template: '{{ ((states.sensor.light_level.state | float() + 50.0)/100.0 * 64 * ((states.sensor.aarhus_daily_max_precip_intensity.state | float() > 0.3) | float())) | round(0) }},0,{{ ((states.sensor.light_level.state | float() + 50.0)/100.0 * 64 * ((states.sensor.aarhus_apparent_temperature.state | float() < 2.0) | float())) | round(0) }}'
+       retain: "true"
 
 - alias: Test to speech
 ####################
@@ -435,3 +525,107 @@
   action:
    - service: script.turn_on
      entity_id: script.weather_presentation
+
+- alias: Christmas on (sunset)
+####################
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-00:30:00"
+    
+  action:
+   - service: mqtt.publish
+     data:
+       topic: "christmas-n/light/set"
+       payload: "50"
+       retain: "true"
+   - service: mqtt.publish
+     data:
+       topic: "christmas-s/light/set"
+       payload: "50"
+       retain: "true"
+
+- alias: Christmas dim (night)
+####################
+  trigger:
+    platform: time
+    at: "22:30:00"
+    
+  action:
+   - service: mqtt.publish
+     data:
+       topic: "christmas-n/light/set"
+       payload: "5"
+       retain: "true"
+
+   - service: mqtt.publish
+     data:
+       topic: "christmas-s/light/set"
+       payload: "5"
+       retain: "true"
+
+- alias: Christmas dim (bed)
+####################
+  trigger:
+    platform: state
+    entity_id: input_boolean.in_bed
+    from: 'off'
+    to: 'on'
+    for:
+      seconds: 10
+    
+  condition:
+    - condition: state
+      entity_id: sun.sun
+      state: 'below_horizon'  
+    
+  action:
+   - service: mqtt.publish
+     data:
+       topic: "christmas-n/light/set"
+       payload: "5"
+       retain: "true"
+
+   - service: mqtt.publish
+     data:
+       topic: "christmas-s/light/set"
+       payload: "5"
+       retain: "true"
+
+- alias: Christmas bright (morning)
+####################
+  trigger:
+    platform: time
+    at: "06:00:00"
+
+  action:
+   - service: mqtt.publish
+     data:
+       topic: "christmas-n/light/set"
+       payload: "50"
+       retain: "true"
+
+   - service: mqtt.publish
+     data:
+       topic: "christmas-s/light/set"
+       payload: "50"
+       retain: "true"
+       
+- alias: Christmas off (sunrise)
+####################
+  trigger:
+    platform: sun
+    event: sunrise
+    offset: "00:30:00"
+    
+  action:
+   - service: mqtt.publish
+     data:
+       topic: "christmas-n/light/set"
+       payload: "0"
+       retain: "true"
+   - service: mqtt.publish
+     data:
+       topic: "christmas-s/light/set"
+       payload: "0"
+       retain: "true"

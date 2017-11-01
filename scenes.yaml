@@ -1,7 +1,5 @@
 - name: Basic light
   entities:
-#    light.onion: on
-#    light.desk: on
     light.kitchen:
       brightness: 5
     light.kitchen_1:
@@ -23,6 +21,33 @@
     light.mood:
       state: on
       rgb_color: [128,64,0]    
+      effect: Plain
+ 
+- name: Light after dark
+  entities:
+    light.castrol: on
+    light.desk: on
+    light.kitchen:
+      brightness: 5
+    light.kitchen_1:
+      state: on
+      color_temp: 500
+      brightness: 5
+    light.kitchen_2:
+      state: on
+      color_temp: 500
+      brightness: 5
+    light.kitchen_3:
+      state: on
+      color_temp: 500
+      brightness: 5
+    light.onion_1:
+      state: on
+      color_temp: 350
+      brightness: 100
+    light.mood:
+      state: on
+      rgb_color: [255,128,32]    
       effect: Plain
  
 - name: Full light
